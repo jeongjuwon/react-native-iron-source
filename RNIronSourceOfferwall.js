@@ -1,37 +1,34 @@
 'use strict';
 
-import {
-  NativeModules,
-  DeviceEventEmitter,
-} from 'react-native';
+import { NativeModules, DeviceEventEmitter } from 'react-native';
 
 const RNIronSourceOfferwall = NativeModules.RNIronSourceOfferwall;
 
 const eventHandlers = {
-  ironSourceOfferwallAvailable: new Map(),//
-  ironSourceOfferwallUnavailable: new Map(),//
-  ironSourceOfferwallDidShow: new Map(),//
-  ironSourceOfferwallClosedByUser: new Map(),//
-  ironSourceOfferwallClosedByError: new Map(),//
-  ironSourceOfferwallReceivedCredits:new Map(),
-  ironSourceOfferwallFailedToReceiveCreditsByError:new Map()//
+  'IronSource-onOfferwallAvailable': new Map(),
+  'IronSource-onOfferwallUnavailable': new Map(),
+  'IronSource-onOfferwallOpened': new Map(),
+  'IronSource-onOfferwallShowFailed': new Map(),
+  'IronSource-onOfferwallAdCredited': new Map(),
+  'IronSource-onGetOfferwallCreditsFailed': new Map(),
+  'IronSource-onOfferwallClosed': new Map(),
 };
 
 const addEventListener = (type, handler) => {
   switch (type) {
-    case 'ironSourceOfferwallOfferwallAvailable':
-    case 'ironSourceOfferwallUnavailable':
-    case 'ironSourceOfferwallDidShow':
-    case 'ironSourceOfferwallClosedByUser':
-    case 'ironSourceOfferwallClosedByError':
-    case 'ironSourceOfferwallReceivedCredits':
-    case 'ironSourceOfferwallFailedToReceiveCreditsByError':
+    case 'IronSource-onOfferwallAvailable':
+    case 'IronSource-onOfferwallUnavailable':
+    case 'IronSource-onOfferwallOpened':
+    case 'IronSource-onOfferwallShowFailed':
+    case 'IronSource-onOfferwallAdCredited':
+    case 'IronSource-onGetOfferwallCreditsFailed':
+    case 'IronSource-onOfferwallClosed':
       eventHandlers[type].set(handler, DeviceEventEmitter.addListener(type, handler));
       break;
     default:
       console.log(`Event with type ${type} does not exist.`);
   }
-}
+};
 
 const removeEventListener = (type, handler) => {
   if (!eventHandlers[type].has(handler)) {
@@ -39,16 +36,16 @@ const removeEventListener = (type, handler) => {
   }
   eventHandlers[type].get(handler).remove();
   eventHandlers[type].delete(handler);
-}
+};
 
 const removeAllListeners = () => {
-  DeviceEventEmitter.removeAllListeners('ironSourceOfferwallAvailable');
-  DeviceEventEmitter.removeAllListeners('ironSourceOfferwallUnavailable');
-  DeviceEventEmitter.removeAllListeners('ironSourceOfferwallDidShow');
-  DeviceEventEmitter.removeAllListeners('ironSourceOfferwallClosedByUser');
-  DeviceEventEmitter.removeAllListeners('ironSourceOfferwallClosedByError');
-  DeviceEventEmitter.removeAllListeners('ironSourceOfferwallReceivedCredits');
-  DeviceEventEmitter.removeAllListeners('ironSourceOfferwallFailedToReceiveCreditsByError');
+  DeviceEventEmitter.removeAllListeners('IronSource-onOfferwallAvailable');
+  DeviceEventEmitter.removeAllListeners('IronSource-onOfferwallUnavailable');
+  DeviceEventEmitter.removeAllListeners('IronSource-onOfferwallOpened');
+  DeviceEventEmitter.removeAllListeners('IronSource-onOfferwallShowFailed');
+  DeviceEventEmitter.removeAllListeners('IronSource-onOfferwallAdCredited');
+  DeviceEventEmitter.removeAllListeners('IronSource-onGetOfferwallCreditsFailed');
+  DeviceEventEmitter.removeAllListeners('IronSource-onOfferwallClosed');
 };
 
 module.exports = {
@@ -57,5 +54,5 @@ module.exports = {
   showOfferwall: () => RNIronSourceOfferwall.showOfferwall(),
   addEventListener,
   removeEventListener,
-  removeAllListeners
+  removeAllListeners,
 };
