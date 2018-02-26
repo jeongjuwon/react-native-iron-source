@@ -11,9 +11,11 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
+import com.ironsource.adapters.supersonicads.SupersonicConfig;
 
 public class RNIronSourceModule extends ReactContextBaseJavaModule {
     private static final String TAG = "RNIronSource";
@@ -33,12 +35,23 @@ public class RNIronSourceModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void initializeIronSource(final String appId, final String userId) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                IronSource.setUserId(userId);
-                IronSource.init(reactContext.getCurrentActivity(), appId);
-            }
-        });
+        IronSource.setUserId(userId);
+        // SupersonicConfig.getConfigObj().setClientSideCallbacks(true);
+        IronSource.init(reactContext.getCurrentActivity(), appId);
+    }
+
+    @ReactMethod
+    public void getTestDeviceId() {
+        IntegrationHelper.validateIntegration(reactContext.getCurrentActivity());
+    }
+
+    @ReactMethod
+    public void onResume() {
+        IronSource.onResume(reactContext.getCurrentActivity());
+    }
+
+    @ReactMethod
+    public void onPause() {
+        IronSource.onPause(reactContext.getCurrentActivity());
     }
 }
